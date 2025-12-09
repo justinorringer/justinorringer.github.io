@@ -30,9 +30,16 @@ jobs:
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '3.1' # Not needed with a .ruby-version file
-          bundler-cache: true # runs 'bundle install' and caches installed gems automatically
-          cache-version: 0 # Increment this number if you need to re-download cached gems
+          ruby-version: '3.1'
+          bundler-cache: false # Disable automatic caching to handle dependency issues
+          cache-version: 1 # Increment to bust cache
+      - name: Clean and install dependencies
+        run: |
+          # Remove problematic lockfile to get fresh dependencies
+          rm -f Gemfile.lock
+          bundle config set --local deployment false
+          bundle config set --local path 'vendor/bundle'
+          bundle install --jobs 4 --retry 3
       - name: Setup Pages
         id: pages
         uses: actions/configure-pages@v4
