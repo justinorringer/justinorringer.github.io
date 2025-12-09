@@ -1,0 +1,37 @@
+---
+layout: default
+---
+
+<div class="home">
+  <div class="hero-section">
+    <h1>{{ site.title }}</h1>
+    <p class="site-description">{{ site.description }}</p>
+  </div>
+
+  <div class="about-section">
+    <h2>About</h2>
+    <p>I'm a film photographer with a passion for capturing moments on analog film. When I'm not in the darkroom, you'll find me working on arcade games, playing trombone and keyboard, or making games. I work as a software developer at Red Hat and love exploring the intersection of technology and creativity.</p>
+    
+    <p>I have a deep appreciation for movies and the art of storytelling through visual media. My photography is influenced by this cinematic perspective, always looking for those decisive moments that tell a story.</p>
+  </div>
+
+  <div class="featured-work">
+    <h2>Featured Work</h2>
+    
+    <div class="work-grid">
+      <div class="work-item photography-preview">
+        <a href="{{ '/photography/' | relative_url }}">
+          <img src="{{ site.cloudinary.base_url }}/w_800,q_auto,f_auto/people/1.jpg" alt="Photography Preview" loading="lazy">
+          <h3>Photography</h3>
+        </a>
+      </div>
+      
+      <div class="work-item projects-preview">
+        <a href="{{ '/projects/' | relative_url }}">
+          <img src="{{ '/assets/images/vampire-castle.png' | relative_url }}" alt="Projects Preview" loading="lazy">
+          <h3>Projects</h3>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

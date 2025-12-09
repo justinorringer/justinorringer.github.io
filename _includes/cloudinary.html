@@ -1,0 +1,30 @@
+<!-- 
+  Cloudinary Image Helper
+  Usage: {% include cloudinary.html src="photo.jpg" alt="Description" transform="medium" folder="street" %}
+-->
+{% assign cloudinary_url = site.cloudinary.base_url %}
+{% assign cloud_name = site.cloudinary.cloud_name %}
+
+{% if include.transform %}
+  {% assign transform = site.cloudinary.transforms[include.transform] %}
+{% else %}
+  {% assign transform = site.cloudinary.transforms.medium %}
+{% endif %}
+
+{% if include.folder %}
+  {% assign folder_path = include.folder | append: "/" %}
+{% else %}
+  {% assign folder_path = "" %}
+{% endif %}
+
+{% assign full_url = cloudinary_url | append: "/" | append: transform | append: "/" | append: folder_path | append: include.src %}
+
+<img 
+  src="{{ full_url }}" 
+  alt="{{ include.alt | default: 'Photography' }}" 
+  loading="lazy" 
+  ondragstart="return false;" 
+  oncontextmenu="return false;"
+  {% if include.class %}class="{{ include.class }}"{% endif %}
+  {% if include.onclick %}onclick="{{ include.onclick }}"{% endif %}
+>

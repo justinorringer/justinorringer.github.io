@@ -1,0 +1,75 @@
+# Site settings
+title: Justin Orringer
+email: justinorringer@gmail.com
+description: >- # this means to ignore newlines until "baseurl:"
+  Film photographer, software developer, musician, and game maker.
+  Darkroom photography, movies, arcade games, and music.
+baseurl: "" # the subpath of your site, e.g. /blog
+url: "https://justinorringer.github.io" # the base hostname & protocol for your site
+github_username: justinorringer
+instagram_username: justintime4246
+linkedin_username: justinorringer
+location: "Raleigh, NC"
+
+# Build settings
+markdown: kramdown
+highlighter: rouge
+theme: minima
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
+  - jekyll-seo-tag
+
+# Exclude from processing
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor/bundle/
+  - vendor/cache/
+  - vendor/gems/
+  - vendor/ruby/
+  - TODO.md
+
+# Collections for organizing content
+collections:
+  projects:
+    output: true
+    permalink: /:collection/:name/
+
+# Cloudinary settings
+cloudinary:
+  cloud_name: "daeavufs1"
+  base_url: "https://res.cloudinary.com/daeavufs1/image/upload"
+  # Transformation settings for different image sizes
+  transforms:
+    thumbnail: "c_fill,w_400,h_300,q_auto,f_auto"
+    medium: "w_800,q_auto,f_auto"
+    large: "w_1200,q_auto,f_auto"
+    full: "q_auto,f_auto"
+
+# Photography settings
+photography:
+  images_per_set: 4
+  sets:
+    - title: "Street Photography"
+      description: "Capturing moments in urban life"
+      folder: "street"
+      images: ["photo1.jpg", "photo2.jpg", "photo3.jpg", "photo4.jpg"]
+    - title: "Film Experiments"  
+      description: "Playing with different film stocks and techniques"
+      folder: "film"
+      images: ["experiment1.jpg", "experiment2.jpg", "experiment3.jpg", "experiment4.jpg"]
+
+# Defaults
+defaults:
+  - scope:
+      path: ""
+      type: "posts"
+    values:
+      layout: "post"
+  - scope:
+      path: ""
+      type: "projects"
+    values:
+      layout: "project"
