@@ -1,14 +1,10 @@
 ---
-layout: page
+layout: gallery
 title: Photography
 permalink: /photography/
 ---
 
 <div class="fullscreen-gallery" oncontextmenu="return false;">
-  <div class="gallery-intro">
-    <p class="swipe-hint">Swipe or use arrow keys to navigate collections</p>
-  </div>
-
   <div class="gallery-container">
     <div class="gallery-slides" id="gallerySlides">
       <!-- Slides will be dynamically loaded here -->
@@ -20,8 +16,6 @@ permalink: /photography/
     </div>
     
     <div class="gallery-info">
-      <h3 id="currentTitle"></h3>
-      <p id="currentDescription"></p>
       <div class="slide-counter">
         <span id="currentSlide">1</span> / <span id="totalSlides">13</span>
       </div>
@@ -33,7 +27,6 @@ permalink: /photography/
 <div id="photoModal" class="modal" onclick="closeModal()">
   <span class="close">&times;</span>
   <img class="modal-content" id="modalImg" ondragstart="return false;" oncontextmenu="return false;">
-  <div class="modal-caption" id="caption"></div>
 </div>
 
 <!-- Pass config to JavaScript -->
@@ -193,8 +186,6 @@ function initGallery() {
 // Show specific slide
 function showSlide(index) {
   const slides = document.querySelectorAll('.gallery-slide');
-  const currentTitle = document.getElementById('currentTitle');
-  const currentDescription = document.getElementById('currentDescription');
   const currentSlideSpan = document.getElementById('currentSlide');
   
   // Hide all slides
@@ -203,9 +194,7 @@ function showSlide(index) {
   // Show current slide
   slides[index].classList.add('active');
   
-  // Update info
-  currentTitle.textContent = collections[index].title;
-  currentDescription.textContent = collections[index].description;
+  // Update counter
   currentSlideSpan.textContent = index + 1;
   
   // Load images for current slide
@@ -216,9 +205,21 @@ function showSlide(index) {
     loadSlideImages(index + 1);
   }
   
-  // Update navigation buttons
-  document.getElementById('prevBtn').style.display = index === 0 ? 'none' : 'block';
-  document.getElementById('nextBtn').style.display = index === collections.length - 1 ? 'none' : 'block';
+  // Update navigation buttons - use class for visibility to maintain layout
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  
+  if (index === 0) {
+    prevBtn.classList.add('hidden');
+  } else {
+    prevBtn.classList.remove('hidden');
+  }
+  
+  if (index === collections.length - 1) {
+    nextBtn.classList.add('hidden');
+  } else {
+    nextBtn.classList.remove('hidden');
+  }
 }
 
 // Load images for a specific slide

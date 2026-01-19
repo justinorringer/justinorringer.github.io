@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="{{ page.lang | default: site.lang | default: 'en' }}">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  
+  <title>{% if page.title %}{{ page.title | escape }} | {{ site.title | escape }}{% else %}{{ site.title | escape }}{% endif %}</title>
+  <meta name="description" content="{{ page.excerpt | default: site.description | strip_html | normalize_whitespace | truncate: 160 | escape }}">
+  
+  <link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}">
+  <link rel="canonical" href="{{ page.url | replace:'index.html','' | absolute_url }}">
+  
+  {% if jekyll.environment == 'production' and site.google_analytics %}
+    {% include google-analytics.html %}
+  {% endif %}
+  
+  {% seo %}
+  {% feed_meta %}
+  
+  <style>
+    /* Gallery-specific overrides for full black page */
+    html, body {
+      background: #000;
+      height: 100%;
+      overflow: hidden;
+      position: fixed;
+      width: 100%;
+      transition: background-color 0.2s ease-in-out;
+    }
+    
+    .site-header {
+      background: rgba(0, 0, 0, 0.9) !important;
+      border-bottom-color: rgba(255, 255, 255, 0.1) !important;
+      transition: all 0.2s ease-in-out !important;
+      position: relative;
+      z-index: 1001;
+    }
+    
+    .site-header .site-title,
+    .site-header .page-link {
+      color: #fff !important;
+      transition: all 0.2s ease-in-out !important;
+    }
+    
+    .site-header .page-link::before {
+      background: #fff !important;
+      transition: all 0.2s ease-in-out !important;
+    }
+    
+    .site-header .mobile-menu-toggle span {
+      background: #fff !important;
+      transition: all 0.2s ease-in-out !important;
+    }
+    
+    /* Mobile menu dark theme */
+    @media (max-width: 768px) {
+      .site-nav .trigger {
+        background: rgba(0, 0, 0, 0.95) !important;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        transition: all 0.2s ease-in-out !important;
+        z-index: 1000;
+        display: flex;
+      }
+      
+      .site-nav .trigger .page-link {
+        border-bottom-color: rgba(255, 255, 255, 0.1) !important;
+        color: #fff !important;
+      }
+      
+      .site-header {
+        position: sticky;
+        top: 0;
+      }
+    }
+    
+    .gallery-page-content {
+      transition: background-color 0.2s ease-in-out;
+    }
+    
+    /* Transition to light overrides */
+    body.transitioning-to-light,
+    body.transitioning-to-light html {
+      background-color: #fff !important;
+    }
+    body.transitioning-to-light .site-header {
+      background-color: rgba(255, 255, 255, 0.95) !important;
+      border-bottom-color: #e8e8e8 !important;
+    }
+    body.transitioning-to-light .site-header .site-title,
+    body.transitioning-to-light .site-header .page-link {
+      color: #222 !important;
+    }
+    body.transitioning-to-light .site-header .page-link::before {
+      background: #222 !important;
+    }
+    body.transitioning-to-light .site-header .mobile-menu-toggle span {
+      background: #222 !important;
+    }
+    body.transitioning-to-light .gallery-page-content {
+      background-color: #fff !important;
+    }
+    @media (max-width: 768px) {
+      body.transitioning-to-light .site-nav .trigger {
+        background: rgba(255, 255, 255, 0.98) !important;
+      }
+    }
+    
+    .gallery-page-content {
+      height: calc(100vh - var(--header-height, 60px));
+      height: calc(100dvh - var(--header-height, 60px));
+      width: 100%;
+      overflow: hidden;
+      background: #000;
+    }
+    
+    /* Mobile: keep fixed layout but ensure menu works */
+    @media (max-width: 768px) {
+      html, body {
+        overflow: hidden;
+        position: fixed;
+        height: 100%;
+        width: 100%;
+      }
+      
+      .gallery-page-content {
+        height: calc(100vh - var(--header-height, 60px));
+        height: calc(100dvh - var(--header-height, 60px));
+        overflow: hidden;
+      }
+      
+      .fullscreen-gallery {
+        height: 100% !important;
+      }
+      
+      .gallery-container {
+        height: 100% !important;
+        align-items: flex-start !important;
+      }
+      
+      .gallery-slides {
+        height: 100% !important;
+      }
+      
+      .gallery-slide {
+        height: 100% !important;
+      }
+      
+      .gallery-slide.active {
+        height: 100% !important;
+        align-items: flex-start !important;
+        padding: 0.5rem 2.5rem !important;
+      }
+      
+      .gallery-slide .photo-grid {
+        height: 100% !important;
+        max-height: 100% !important;
+        grid-template-rows: 1fr 1fr !important;
+      }
+      
+      .gallery-slide .photo-item {
+        min-height: 0 !important;
+        height: 100% !important;
+      }
+    }
+    
+    /* Minimal counter styling */
+    .gallery-info {
+      position: absolute;
+      bottom: 1rem;
+      left: 0;
+      right: 0;
+      text-align: center;
+      pointer-events: none;
+    }
+    
+    .slide-counter {
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 0.75rem;
+      font-weight: 300;
+      letter-spacing: 0.1em;
+    }
+  </style>
+</head>
+<body class="gallery-body">
+  <header class="site-header">
+    <div class="wrapper">
+      <a class="site-title" href="{{ '/' | relative_url }}">{{ site.title | escape }}</a>
+      
+      <nav class="site-nav">
+        <button class="mobile-menu-toggle" aria-label="Toggle menu" onclick="this.classList.toggle('active'); document.querySelector('.trigger').classList.toggle('active');">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+        <div class="trigger">
+          <a class="page-link{% if page.url == '/' %} active{% endif %}" href="{{ '/' | relative_url }}">Home</a>
+          <a class="page-link{% if page.url == '/photography/' %} active{% endif %}" href="{{ '/photography/' | relative_url }}">Photography</a>
+          <a class="page-link{% if page.url == '/projects/' %} active{% endif %}" href="{{ '/projects/' | relative_url }}">Projects</a>
+          <a class="page-link{% if page.url == '/contact/' %} active{% endif %}" href="{{ '/contact/' | relative_url }}">Contact</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main class="gallery-page-content">
+    {{ content }}
+  </main>
+
+  <script>
+    // Prevent zoom on touch devices
+    document.addEventListener('gesturestart', function(e) {
+      e.preventDefault();
+    });
+    document.addEventListener('gesturechange', function(e) {
+      e.preventDefault();
+    });
+    document.addEventListener('gestureend', function(e) {
+      e.preventDefault();
+    });
+    document.addEventListener('wheel', function(e) {
+      if (e.ctrlKey) {
+        e.preventDefault();
+      }
+    }, { passive: false });
+    document.addEventListener('keydown', function(e) {
+      if (e.ctrlKey && (e.key === '+' || e.key === '-' || e.key === '=' || e.key === '0')) {
+        e.preventDefault();
+      }
+    });
+    
+    // Background transition handling
+    (function() {
+      // Intercept link clicks for smooth background transition
+      document.addEventListener('click', function(e) {
+        const link = e.target.closest('a');
+        if (link && link.href && !link.href.startsWith('javascript:') && 
+            !link.href.startsWith('#') && link.target !== '_blank' &&
+            link.hostname === window.location.hostname) {
+          
+          // Check if navigating away from photography (to light page)
+          const goingToLight = link.pathname !== '/photography/' && link.pathname !== '/photography';
+          
+          if (goingToLight) {
+            e.preventDefault();
+            document.body.classList.add('transitioning-to-light');
+            setTimeout(function() {
+              window.location.href = link.href;
+            }, 200);
+          }
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

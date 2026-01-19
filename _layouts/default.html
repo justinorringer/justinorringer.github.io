@@ -17,6 +17,25 @@
   
   {% seo %}
   {% feed_meta %}
+  
+  <style>
+    /* Background color transition */
+    html, body, .site-header {
+      transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+    }
+    body.transitioning-to-dark {
+      background-color: #000 !important;
+    }
+    body.transitioning-to-dark .site-header {
+      background-color: rgba(0, 0, 0, 0.9) !important;
+      border-bottom-color: rgba(255, 255, 255, 0.1) !important;
+    }
+    body.transitioning-to-dark .site-header .site-title,
+    body.transitioning-to-dark .site-header .page-link {
+      color: #fff !important;
+      transition: color 0.2s ease-in-out;
+    }
+  </style>
 </head>
 <body>
   <header class="site-header">
@@ -24,6 +43,11 @@
       <a class="site-title" href="{{ '/' | relative_url }}">{{ site.title | escape }}</a>
       
       <nav class="site-nav">
+        <button class="mobile-menu-toggle" aria-label="Toggle menu" onclick="this.classList.toggle('active'); document.querySelector('.trigger').classList.toggle('active');">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
         <div class="trigger">
           <a class="page-link{% if page.url == '/' %} active{% endif %}" href="{{ '/' | relative_url }}">Home</a>
           <a class="page-link{% if page.url == '/photography/' %} active{% endif %}" href="{{ '/photography/' | relative_url }}">Photography</a>
@@ -40,50 +64,52 @@
     </div>
   </main>
 
-  <footer class="site-footer">
-    <div class="wrapper">
-      <div class="footer-col-wrapper">
-        <div class="footer-col footer-col-1">
-          <ul class="contact-list">
-            <li>{{ site.title | escape }}</li>
-            <li>{{ site.location }}</li>
-          </ul>
-        </div>
-        
-        <div class="footer-col footer-col-2">
-          <ul class="social-media-list">
-            {% if site.github_username %}
-            <li>
-              <a href="https://github.com/{{ site.github_username }}">
-                <span class="username">GitHub</span>
-              </a>
-            </li>
-            {% endif %}
-            
-            {% if site.linkedin_username %}
-            <li>
-              <a href="https://linkedin.com/in/{{ site.linkedin_username }}">
-                <span class="username">LinkedIn</span>
-              </a>
-            </li>
-            {% endif %}
-            
-            {% if site.instagram_username %}
-            <li>
-              <a href="https://instagram.com/{{ site.instagram_username }}">
-                <span class="username">Instagram</span>
-              </a>
-            </li>
-            {% endif %}
-          </ul>
-        </div>
-        
-        <div class="footer-col footer-col-3">
-          <p>{{ site.description | escape }}</p>
-        </div>
-      </div>
-    </div>
-  </footer>
-
+  <script>
+    // Background transition handling
+    (function() {
+      // Intercept link clicks for smooth background transition
+      document.addEventListener('click', function(e) {
+        const link = e.target.closest('a');
+        if (link && link.href && !link.href.startsWith('javascript:') && 
+            !link.href.startsWith('#') && link.target !== '_blank' &&
+            link.hostname === window.location.hostname) {
+          
+          // Check if navigating to photography (dark page)
+          const goingToDark = link.pathname === '/photography/' || link.pathname === '/photography';
+          
+          if (goingToDark) {
+            e.preventDefault();
+            document.body.classList.add('transitioning-to-dark');
+            setTimeout(function() {
+              window.location.href = link.href;
+            }, 200);
+          }
+        }
+      });
+    })();
+    
+    // Prevent zoom on touch devices
+    document.addEventListener('gesturestart', function(e) {
+      e.preventDefault();
+    });
+    document.addEventListener('gesturechange', function(e) {
+      e.preventDefault();
+    });
+    document.addEventListener('gestureend', function(e) {
+      e.preventDefault();
+    });
+    // Prevent Ctrl+scroll zoom on desktop
+    document.addEventListener('wheel', function(e) {
+      if (e.ctrlKey) {
+        e.preventDefault();
+      }
+    }, { passive: false });
+    // Prevent Ctrl+Plus/Minus zoom
+    document.addEventListener('keydown', function(e) {
+      if (e.ctrlKey && (e.key === '+' || e.key === '-' || e.key === '=' || e.key === '0')) {
+        e.preventDefault();
+      }
+    });
+  </script>
 </body>
 </html>

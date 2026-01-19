@@ -27,6 +27,7 @@ group :jekyll_plugins do
   gem "jekyll-feed", "~> 0.12"
   gem "jekyll-sitemap"
   gem "jekyll-seo-tag"
+  gem "jekyll-email-protect"
   gem "dotenv", "~> 2.8"  # Moved here so it's available to plugins
 end
 

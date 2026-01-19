@@ -11,14 +11,8 @@ permalink: /contact/
 
   <div class="contact-grid">
     <div class="contact-info">
-      <h2>Get in Touch</h2>
-      
+
       <div class="contact-details">
-        <div class="contact-item">
-          <h3>Email</h3>
-          <p><a href="mailto:{{ site.email }}">{{ site.email }}</a></p>
-        </div>
-        
         <div class="contact-item">
           <h3>Location</h3>
           <p>{{ site.location }}</p>
@@ -46,6 +40,9 @@ permalink: /contact/
           <a href="https://instagram.com/{{ site.instagram_username }}" target="_blank" rel="noopener" class="social-link instagram">
             <span>Instagram</span>
             <small>@{{ site.instagram_username }}</small>
+          </a>
+          <a href="#" class="protected-email social-link instagram" data-email="{{ site.email | encode_email }}">
+            <span>Email</span>
           </a>
         </div>
       </div>
@@ -89,7 +86,7 @@ permalink: /contact/
       </form>
       
       <div class="form-note">
-        <p><small>This form uses Formspree to handle submissions. Your email will be sent directly to {{ site.email }}.</small></p>
+        <p><small>This form uses Formspree to handle submissions. Your email will be sent directly to me.</span>.</small></p>
       </div>
     </div>
   </div>
@@ -97,6 +94,26 @@ permalink: /contact/
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    // Decode protected email addresses
+    function decodeEmail(encoded) {
+        const textarea = document.createElement('textarea');
+        textarea.innerHTML = encoded;
+        return textarea.value;
+    }
+    
+    // Handle clickable email links
+    document.querySelectorAll('.protected-email').forEach(function(el) {
+        const encodedEmail = el.dataset.email;
+        const decodedEmail = decodeEmail(encodedEmail);
+        el.href = 'mailto:' + decodedEmail;
+    });
+    
+    // Handle inline email text
+    document.querySelectorAll('.protected-email-text').forEach(function(el) {
+        const encodedEmail = el.dataset.email;
+        el.textContent = decodeEmail(encodedEmail);
+    });
+    
     const form = document.getElementById('contact-form');
     const status = document.getElementById('form-status');
     const submitBtn = document.getElementById('submit-btn');
@@ -148,10 +165,12 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .catch(error => {
             // Error
+            const emailLink = document.querySelector('.protected-email');
+            const email = emailLink ? emailLink.textContent : 'me directly';
             status.innerHTML = `
                 <div class="status-error">
                     <h3>Oops! Something went wrong.</h3>
-                    <p>Please try again or email me directly at {{ site.email }}</p>
+                    <p>Please try again or email me directly.</p>
                 </div>
             `;
             status.style.display = 'block';
